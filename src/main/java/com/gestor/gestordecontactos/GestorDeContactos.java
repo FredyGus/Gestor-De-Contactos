@@ -20,7 +20,7 @@ class Contacto {
         this.telefono = telefono;
     }
 
-    // Métodos getter y setter
+    // Métodos getter y setterD
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
