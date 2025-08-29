@@ -48,3 +48,24 @@ El programa ofrece una interfaz gráfica sencilla para **agregar, modificar, eli
 
    ```
   
+## 📸 Capturas de Pantalla
+
+### 🖼️ Interfaz Principal
+![Interfaz Principal](capturas/interfaz.png)
+
+
+### ➕ Agregar Contacto
+![Agregar 1](capturas/agregar1.png)
+![Agregar 2](capturas/agregar2.png)
+
+
+
+### ❌ Eliminar Contacto
+![Eliminar 1](capturas/eliminar1.png)
+![Eliminar 2](capturas/eliminar2.png)
+
+
+### 📝 Modificar Contacto
+![Modificar 1](capturas/modificar1.png)
+![Modificar 2](capturas/modificar2.png)
+![Modificar 3](capturas/modificar3.png)
