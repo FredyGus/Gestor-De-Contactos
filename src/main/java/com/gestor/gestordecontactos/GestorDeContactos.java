@@ -7,6 +7,10 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Clase Contacto
+ * Representa un contacto con nombre y teléfono.
+ */
 class Contacto {
     private String nombre;
     private String telefono;
@@ -16,6 +20,7 @@ class Contacto {
         this.telefono = telefono;
     }
 
+    // Métodos getter y setter
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
@@ -28,59 +33,74 @@ class Contacto {
     }
 }
 
+/**
+ * Clase GestorDeContactos
+ * Ventana principal que permite gestionar contactos:
+ * Agregar, eliminar, modificar y guardar en un archivo.
+ */
 public class GestorDeContactos extends JFrame {
+    // Componentes de la interfaz
     private JTextField txtNombre, txtTelefono;
     private JButton btnAgregar, btnEliminar, btnModificar;
     private JTable tabla;
     private DefaultTableModel modelo;
+    
+    // Lista en memoria para manejar contactos
     private ArrayList<Contacto> listaContactos;
 
+    // Archivo donde se guardan los contactos
     private final String ARCHIVO = "contactos.txt";
 
+    /**
+     * Constructor de la ventana principal
+     */
     public GestorDeContactos() {
-        setTitle("Gestor de Contactos");
-        setSize(600, 400);
+        setTitle("Gestor de Contactos");  // Título de la ventana
+        setSize(600, 400);                // Tamaño inicial
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null);      // Centrar ventana
 
         listaContactos = new ArrayList<>();
 
-        // Panel de entrada
+        // ---------------- Panel de entrada ----------------
+        // Permite ingresar nombre y teléfono
         JPanel panelEntrada = new JPanel(new GridLayout(2, 2, 5, 5));
         panelEntrada.add(new JLabel("Nombre:"));
         txtNombre = new JTextField();
         panelEntrada.add(txtNombre);
-        panelEntrada.add(new JLabel("Teléfono:"));
+        panelEntrada.add(new JLabel("Telefono:"));
         txtTelefono = new JTextField();
         panelEntrada.add(txtTelefono);
 
-        // Panel de botones
-        JPanel panelBotones = new JPanel(new FlowLayout());
+        // ---------------- Panel de botones ----------------
         btnAgregar = new JButton("Agregar");
         btnEliminar = new JButton("Eliminar");
         btnModificar = new JButton("Modificar");
+        JPanel panelBotones = new JPanel(new FlowLayout());
         panelBotones.add(btnAgregar);
         panelBotones.add(btnEliminar);
         panelBotones.add(btnModificar);
 
-        // Tabla de contactos
-        modelo = new DefaultTableModel(new String[]{"Nombre", "Teléfono"}, 0);
+        // ---------------- Tabla de contactos ----------------
+        modelo = new DefaultTableModel(new String[]{"Nombre", "Telefono"}, 0);
         tabla = new JTable(modelo);
         JScrollPane scroll = new JScrollPane(tabla);
 
-        // Layout principal
+        // ---------------- Layout principal ----------------
         setLayout(new BorderLayout(10, 10));
         add(panelEntrada, BorderLayout.NORTH);
         add(scroll, BorderLayout.CENTER);
         add(panelBotones, BorderLayout.SOUTH);
 
-        // Eventos
+        // ---------------- Eventos ----------------
         btnAgregar.addActionListener(e -> agregarContacto());
         btnEliminar.addActionListener(e -> eliminarContacto());
         btnModificar.addActionListener(e -> modificarContacto());
 
-        // Cargar y Guardar archivos
+        // Cargar contactos al iniciar
         cargarContactos();
+
+        // Guardar contactos al cerrar ventana
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -89,19 +109,26 @@ public class GestorDeContactos extends JFrame {
         });
     }
 
+    /**
+     * Agrega un nuevo contacto a la lista y la tabla
+     */
     private void agregarContacto() {
         String nombre = txtNombre.getText().trim();
         String telefono = txtTelefono.getText().trim();
+
         if (!nombre.isEmpty() && !telefono.isEmpty()) {
             Contacto c = new Contacto(nombre, telefono);
             listaContactos.add(c);
             modelo.addRow(new Object[]{c.getNombre(), c.getTelefono()});
             limpiarCampos();
         } else {
-            JOptionPane.showMessageDialog(this, "Ingrese nombre y teléfono.");
+            JOptionPane.showMessageDialog(this, "Ingrese nombre y telefono.");
         }
     }
 
+    /**
+     * Elimina el contacto seleccionado de la lista y la tabla
+     */
     private void eliminarContacto() {
         int fila = tabla.getSelectedRow();
         if (fila >= 0) {
@@ -112,31 +139,43 @@ public class GestorDeContactos extends JFrame {
         }
     }
 
+    /**
+     * Modifica el contacto seleccionado con los nuevos datos
+     */
     private void modificarContacto() {
         int fila = tabla.getSelectedRow();
         if (fila >= 0) {
             String nuevoNombre = txtNombre.getText().trim();
             String nuevoTelefono = txtTelefono.getText().trim();
+
             if (!nuevoNombre.isEmpty() && !nuevoTelefono.isEmpty()) {
                 Contacto c = listaContactos.get(fila);
                 c.setNombre(nuevoNombre);
                 c.setTelefono(nuevoTelefono);
+
+                // Actualizar tabla
                 modelo.setValueAt(nuevoNombre, fila, 0);
                 modelo.setValueAt(nuevoTelefono, fila, 1);
                 limpiarCampos();
             } else {
-                JOptionPane.showMessageDialog(this, "Ingrese nombre y teléfono.");
+                JOptionPane.showMessageDialog(this, "Ingrese nombre y telefono.");
             }
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione un contacto para modificar.");
         }
     }
 
+    /**
+     * Limpia los campos de entrada
+     */
     private void limpiarCampos() {
         txtNombre.setText("");
         txtTelefono.setText("");
     }
 
+    /**
+     * Carga los contactos desde el archivo en la lista y tabla
+     */
     private void cargarContactos() {
         try (BufferedReader br = new BufferedReader(new FileReader(ARCHIVO))) {
             String linea;
@@ -149,10 +188,13 @@ public class GestorDeContactos extends JFrame {
                 }
             }
         } catch (IOException e) {
-            System.out.println("No se encontró archivo, se creará al guardar.");
+            System.out.println("No se encontro archivo, se creara al guardar.");
         }
     }
 
+    /**
+     * Guarda los contactos en el archivo de texto
+     */
     private void guardarContactos() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARCHIVO))) {
             for (Contacto c : listaContactos) {
@@ -164,6 +206,9 @@ public class GestorDeContactos extends JFrame {
         }
     }
 
+    /**
+     * Método principal
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new GestorDeContactos().setVisible(true));
     }
